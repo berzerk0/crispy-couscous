@@ -1,123 +1,71 @@
-# Task Plan: Execute Immediate Action Items
+# Task Plan: Vibe Code Skill Invocation Analysis
 
-**Created:** 2026-08-24  
-**Scope:** Fix critical documentation and configuration issues in crispy-couscous  
-**Skill Used:** planning-with-files  
+## Goal
+Answer four questions about Vibe Code's skill system:
+1. Can Vibe Code on the web identify its own skills?
+2. Can models invoke skills automatically?
+3. How about agent files?
+4. How does Vibe Code on the web know when to invoke skills?
 
----
+Validate answers using: (1) docs in this repo, (2) official Mistral docs if insufficient, (3) manual source verification.
 
-## Executive Summary
-
-Execute the 5 immediate action items identified in the audit to bring the repository to a fully functional state across all platforms (Claude, Pi, Vibe).
-
----
+## Current Phase
+Phase 5: Synthesize Answers
 
 ## Phases
 
-### Phase 1: Setup & Planning (COMPLETED)
-- [x] Create scratchpad directory
-- [x] Create task_plan.md (this file)
-- [x] Create findings.md
-- [x] Create progress.md
-- [x] Review all immediate action items
+### Phase 1: Requirements & Discovery
+- [x] Understand the four questions
+- [x] Identify relevant documentation in repo
+- [x] Document findings from repo docs
+- **Status:** completed
 
-**Status:** ✅ COMPLETED
+### Phase 2: Research from Repo Docs
+- [x] Search and read VERIFIED_REFERENCE.md
+- [x] Search and read vibe-reference skill
+- [x] Search and read COMPATIBILITY.md
+- [x] Extract answers to all four questions
+- **Status:** completed
 
----
+### Phase 3: Validate with Official Docs
+- [x] Search Mistral docs for skill discovery
+- [x] Search Mistral docs for automatic invocation
+- [x] Search Mistral docs for agent file behavior
+- [x] Cross-validate findings
+- **Status:** completed
 
-### Phase 2: Documentation Fixes (P0 - HIGH PRIORITY)
+### Phase 4: Manual Source Verification
+- [x] Check source code references in VERIFIED_REFERENCE.md
+- [x] Verify skill loading behavior
+- [x] Verify model invocation behavior
+- **Status:** completed
 
-#### Task 2.1: Update README.md with all 13 skills
-- **File:** README.md
-- **Issue:** Only 5 skills listed, 13 exist
-- **Missing skills:** clarify, escalate, modern-python, napkin, planning-with-files, script-it, skill-extractor, writing-for-agents
-- **Estimate:** 10 minutes
-- **Status:** ⏳ PENDING
+### Phase 5: Synthesize Answers
+- [x] Compile final answers with citations
+- [x] Document validation process
+- [x] Create findings.md and progress.md
+- **Status:** completed
 
-#### Task 2.2: Fix CLAUDE.md reference in writing-for-agents/SKILL.md
-- **File:** skills/writing-for-agents/SKILL.md
-- **Issue:** Line 3 references CLAUDE.md which doesn't exist
-- **Fix:** Remove "CLAUDE.md" from description
-- **Estimate:** 2 minutes
-- **Status:** ⏳ PENDING
+## Key Questions
+1. What mechanism does Vibe Code use to discover skills?
+2. What triggers skill invocation by the model?
+3. How are agent files related to skills?
+4. What is the decision process for when to invoke skills?
 
----
+## Answers Compiled
+1. **Skill Discovery**: Vibe Code discovers skills via `.vibe/skills/` (project) and `~/.vibe/skills/` (user) directories, plus `skill_paths` in config.toml
+2. **Automatic Invocation**: Models CAN invoke skills automatically when they are enabled and have a description field (model-invoked)
+3. **Agent Files**: Agent files (.toml in .vibe/agents/) define subagents with their own tool sets; the `skill` tool must be in enabled_tools for the agent to load skills
+4. **Invocation Decision**: Models decide based on skill name+description in system prompt; progressive disclosure means full content loads only on first invocation
 
-### Phase 3: Cross-Agent Compatibility (P0 - HIGH PRIORITY)
+## Decisions Made
+| Decision | Rationale |
+|----------|-----------|
+| Use planning-with-files methodology | User explicitly requested this approach |
+| Created isolated branch | Prevents contamination of main branch |
+| Start with repo docs | Highest confidence, already verified |
 
-#### Task 3.1: Run generate_all.py to create missing agent files
-- **File:** meta/generate_all.py
-- **Issue:** .claude/agents/ and .pi/agents/ only have 4 files each, should have 13+
-- **Command:** `python meta/generate_all.py --all`
-- **Estimate:** 5 minutes
-- **Status:** ⏳ PENDING
-
----
-
-### Phase 4: Structure Standardization (P1 - MEDIUM PRIORITY)
-
-#### Task 4.1: Standardize .vibe/skills/ to all symlinks
-- **Directory:** .vibe/skills/
-- **Issue:** Mixed structure - 10 symlinks, 3+ real directories
-- **Action:** Remove real directories, create symlinks to ../../skills/<name>
-- **Estimate:** 10 minutes
-- **Status:** ⏳ PENDING
-
-#### Task 4.2: Standardize agent_type values
-- **Files:** .vibe/agents/*.toml
-- **Issue:** Inconsistent - some "agent", some "subagent"
-- **Action:** Review and standardize (document rationale or make consistent)
-- **Estimate:** 5 minutes
-- **Status:** ⏳ PENDING
-
----
-
-## Success Criteria
-
-- [ ] README.md lists all 13 skills in the table
-- [ ] No CLAUDE.md references in skill files
-- [ ] .claude/agents/ has all 13+ skill agent files
-- [ ] .pi/agents/ has all 13+ skill agent files
-- [ ] .vibe/skills/ contains only symlinks (no real directories)
-- [ ] All agent_type values are consistent or documented
-
----
-
-## File Checklist
-
-| File | Action | Status |
-|------|--------|--------|
-| README.md | Add 8 missing skills to table | ⏳ PENDING |
-| skills/writing-for-agents/SKILL.md | Remove CLAUDE.md reference | ⏳ PENDING |
-| meta/generate_all.py | Run to generate agent files | ⏳ PENDING |
-| .vibe/skills/* | Convert real dirs to symlinks | ⏳ PENDING |
-| .vibe/agents/*.toml | Standardize agent_type | ⏳ PENDING |
-
----
-
-## Phase Execution Order
-
-1. **Phase 2** (Documentation) - Quick wins, low risk
-2. **Phase 3** (Cross-Agent) - Critical for multi-platform support
-3. **Phase 4** (Standardization) - Cleanup and consistency
-
----
-
-## Risk Assessment
-
-| Task | Risk Level | Mitigation |
-|------|------------|------------|
-| README.md update | LOW | Git backup, review changes before commit |
-| SKILL.md fix | LOW | Small change, easy to verify |
-| generate_all.py | MEDIUM | Check output files, don't overwrite existing |
-| Symlink conversion | MEDIUM | Backup first, verify symlinks resolve |
-| agent_type standardization | LOW | Document rationale for differences |
-
----
-
-## Notes
-
-- All changes should be committed with descriptive messages
-- Verify each change after execution
-- Log all actions in progress.md
-- Update findings.md with any discoveries
+## Errors Encountered
+| Error | Attempt | Resolution |
+|-------|---------|------------|
+| None yet | | |
